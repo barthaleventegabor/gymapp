@@ -14,23 +14,48 @@
       <h1>Válaszd ki az izomcsoprtot, amit edzeni szeretnél</h1>
     </div>
 
-    <!-- https://www.flaticon.com/search?word=chest%20muscle -->
-    <button class="izomcsoportbtn">
-      <img src="chest.png" alt="Chest Icon" />
-      Mell
-    </button>
-    
-    
-    
+    <!-- Bootstrap sor (row) -->
+    <div class="row">
+      <!-- Kártyák (oszlopok) -->
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4" onclick="window.location.href='mell.html';">
+        <button class="izomcsoportbtn w-100">
+          <img src="chest.png" alt="Chest Icon" />
+          Mell
+        </button>
+      </div>
 
-   
-    
-    
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4" >
+        <button class="izomcsoportbtn w-100" onclick="window.location.href='hat.html';">
+          <img src="back.png" alt="Back Icon" />
+          Hát
+        </button>
+      </div>
+
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <button class="izomcsoportbtn w-100" onclick="window.location.href='bicepsz.html';">
+          <img src="bicep.png" alt="Bicep Icon" />
+          Bicepsz
+        </button>
+      </div>
+
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <button class="izomcsoportbtn w-100" onclick="window.location.href='tricepsz.html';">
+          <img src="triceps.png" alt="Triceps Icon" />
+          Tricepsz
+        </button>
+      </div>
+
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <button class="izomcsoportbtn w-100" onclick="window.location.href='vall.html';">
+          <img src="shoulder.png" alt="Shoulder Icon" />
+          Váll
+        </button>
+      </div>
+    </div>
   </div>
+
+  <!-- Bootstrap JS (jQuery, Popper, Bootstrap JS) -->
   <script src="bootstrap.js"></script>
   <script src="app.js"></script>  
 </body>
 </html>
-
-
-
