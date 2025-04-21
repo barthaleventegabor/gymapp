@@ -15,7 +15,7 @@
   
   body {
     font-family: 'Roboto', sans-serif;
-
+    background-color: #121212;
   }
   
   .container {
@@ -26,6 +26,8 @@
     font-family: 'Montserrat', sans-serif;
     color: #F5F5F5;
     background-color: #121212;
+
+   
   }
 
   .h1div{
@@ -48,6 +50,7 @@
     font-size: 18px;
     border: none;
     padding: 10px;
+    border-radius: 10%;
   }
   
   .izomcsoportbtn img {
@@ -56,3 +59,52 @@
     margin-bottom: 4px; /* Kép és szöveg közötti távolság */
   }
   
+  .gyakorlat{
+    margin: 10px 0;
+    width: 100%;
+    float: left;
+    padding: 3px;
+    border-bottom:  1px solid #F5F5F5;
+    display: flex;
+}
+
+
+.gyakorlatcontent{
+  height: 150px;
+  width: 100%;
+  overflow-y: scroll;
+  padding: 10px;
+  background-color: #1E1E1E;
+  border-radius: 3%;
+  margin: 0 auto;
+  border: 1px solid #F5F5F5;
+
+  
+}
+
+.gyakorlath2{
+  margin-top: 35px;
+  text-align: center;
+}
+
+.gyakorlatok{
+  
+}
+
+.gyakorlatdata{
+  flex: 1;
+  text-align: center;
+  
+
+}
+
+.rogzitesbutton{
+  border: 1px solid #F5F5F5;
+  color: #F5F5F5;
+  background-color: #1E1E1E;
+}
+
+.beviteldiv{
+  background-color: 	
+  #B0B0B0;
+}
