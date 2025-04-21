@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-app.js";
-import { getDatabase, ref, set, get, push } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-database.js";
+import { getDatabase, ref, set, get, push, remove } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-database.js";
 
 // Firebase konfiguráció
 const firebaseConfig = {
@@ -17,7 +17,7 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 // Az "Rögzítés" gomb eseménykezelője
-document.getElementById('send').addEventListener('click', function() {
+document.getElementById('sendincdb').addEventListener('click', function() {
   const weight = document.getElementById('inclinedbsuly').value; // Az űrlapból beírt súly
   const date = new Date().toLocaleDateString(); // A mai dátum
 
@@ -29,7 +29,7 @@ document.getElementById('send').addEventListener('click', function() {
       weight: weight
     }).then(() => {
       // Az új adat hozzáadása után frissítjük a táblázatot
-      addGyakorlatToTable(date, weight);
+      addGyakorlatToTable(date, weight, newPostKey); // Hozzáadjuk a key-t is a funkcióhoz
       document.getElementById('inclinedbsuly').value = ''; // Űrlap törlése
     }).catch((error) => {
       console.error("Hiba történt az adat rögzítése során: ", error);
@@ -38,12 +38,13 @@ document.getElementById('send').addEventListener('click', function() {
 });
 
 // Funkció, ami hozzáadja a gyakorlatot a táblázathoz
-function addGyakorlatToTable(date, weight) {
+function addGyakorlatToTable(date, weight, key) {
   const gyakorlatokDiv = document.querySelector('.gyakorlatok');
 
   const newGyakorlat = document.createElement('div');
   newGyakorlat.classList.add('gyakorlat');
-  
+  newGyakorlat.dataset.key = key; // Az adat key hozzáadása a div-hez
+
   const dateDiv = document.createElement('div');
   dateDiv.classList.add('gyakorlatdata');
   dateDiv.textContent = date;
@@ -52,10 +53,31 @@ function addGyakorlatToTable(date, weight) {
   weightDiv.classList.add('gyakorlatdata');
   weightDiv.textContent = weight;
 
+  const deleteButton = document.createElement('button');
+  deleteButton.classList.add('torlo');
+  deleteButton.textContent = 'Törlés';
+  deleteButton.addEventListener('click', function() {
+    deleteGyakorlat(key, newGyakorlat); // A gomb megnyomásakor törölni fogjuk az adatot
+  });
+
   newGyakorlat.appendChild(dateDiv);
   newGyakorlat.appendChild(weightDiv);
+  newGyakorlat.appendChild(deleteButton);
 
   gyakorlatokDiv.appendChild(newGyakorlat); // Az új gyakorlatot a lista végére helyezi
+}
+
+// Funkció a gyakorlat törlésére Firebase-ből és a DOM-ból
+function deleteGyakorlat(key, gyakorlatDiv) {
+  const gyakorlatRef = ref(database, 'gyakorlatok/' + key);
+
+  // Az adat törlése Firebase-ből
+  remove(gyakorlatRef).then(() => {
+    // Ha sikerült törölni, eltávolítjuk a DOM-ból
+    gyakorlatDiv.remove();
+  }).catch((error) => {
+    console.error("Hiba történt a törlés során: ", error);
+  });
 }
 
 // Az oldal betöltésekor minden adat lekérése a Firebase-ből
@@ -67,7 +89,7 @@ window.onload = function() {
       for (const key in gyakorlatok) {
         const date = gyakorlatok[key].date;
         const weight = gyakorlatok[key].weight;
-        addGyakorlatToTable(date, weight); // Az adatokat hozzáadjuk a táblázathoz
+        addGyakorlatToTable(date, weight, key); // Az adatokat hozzáadjuk a táblázathoz
       }
     }
   }).catch((error) => {
