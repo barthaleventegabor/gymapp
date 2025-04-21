@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-database.js";
+import { getDatabase, ref, set, get, push } from "https://www.gstatic.com/firebasejs/9.8.0/firebase-database.js";
 
 // Firebase konfiguráció
 const firebaseConfig = {
@@ -16,3 +16,61 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
+// Az "Rögzítés" gomb eseménykezelője
+document.getElementById('send').addEventListener('click', function() {
+  const weight = document.getElementById('inclinedbsuly').value; // Az űrlapból beírt súly
+  const date = new Date().toLocaleDateString(); // A mai dátum
+
+  if (weight !== "") {
+    // Adat rögzítése Firebase-ben
+    const newPostKey = push(ref(database, 'gyakorlatok')).key; // Új kulcs generálása
+    set(ref(database, 'gyakorlatok/' + newPostKey), {
+      date: date,
+      weight: weight
+    }).then(() => {
+      // Az új adat hozzáadása után frissítjük a táblázatot
+      addGyakorlatToTable(date, weight);
+      document.getElementById('inclinedbsuly').value = ''; // Űrlap törlése
+    }).catch((error) => {
+      console.error("Hiba történt az adat rögzítése során: ", error);
+    });
+  }
+});
+
+// Funkció, ami hozzáadja a gyakorlatot a táblázathoz
+function addGyakorlatToTable(date, weight) {
+  const gyakorlatokDiv = document.querySelector('.gyakorlatok');
+
+  const newGyakorlat = document.createElement('div');
+  newGyakorlat.classList.add('gyakorlat');
+  
+  const dateDiv = document.createElement('div');
+  dateDiv.classList.add('gyakorlatdata');
+  dateDiv.textContent = date;
+
+  const weightDiv = document.createElement('div');
+  weightDiv.classList.add('gyakorlatdata');
+  weightDiv.textContent = weight;
+
+  newGyakorlat.appendChild(dateDiv);
+  newGyakorlat.appendChild(weightDiv);
+
+  gyakorlatokDiv.appendChild(newGyakorlat); // Az új gyakorlatot a lista végére helyezi
+}
+
+// Az oldal betöltésekor minden adat lekérése a Firebase-ből
+window.onload = function() {
+  const dbRef = ref(database, 'gyakorlatok');
+  get(dbRef).then((snapshot) => {
+    if (snapshot.exists()) {
+      const gyakorlatok = snapshot.val();
+      for (const key in gyakorlatok) {
+        const date = gyakorlatok[key].date;
+        const weight = gyakorlatok[key].weight;
+        addGyakorlatToTable(date, weight); // Az adatokat hozzáadjuk a táblázathoz
+      }
+    }
+  }).catch((error) => {
+    console.error("Hiba történt az adatok betöltése során: ", error);
+  });
+};
