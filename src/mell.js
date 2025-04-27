@@ -57,18 +57,20 @@ function addExerciseToTable(containerId, date, weight, key) {
   deleteButton.classList.add('torlo');
   deleteButton.textContent = 'Törlés';
   deleteButton.addEventListener('click', function() {
-    deleteExercise(exerciseName, key, newGyakorlat); // A gomb megnyomásakor törölni fogjuk az adatot
+    deleteExercise(containerId, key, newGyakorlat); // A gomb megnyomásakor törölni fogjuk az adatot
   });
 
   newGyakorlat.appendChild(dateDiv);
   newGyakorlat.appendChild(weightDiv);
   newGyakorlat.appendChild(deleteButton);
 
-  gyakorlatokDiv.appendChild(newGyakorlat); // Az új gyakorlatot a lista végére helyezi
+  // Új gyakorlatot a lista legelső helyére rakjuk
+  gyakorlatokDiv.insertBefore(newGyakorlat, gyakorlatokDiv.firstChild); // Új elem az elejére kerül
 }
 
 // Funkció a gyakorlat törlésére Firebase-ből és a DOM-ból
-function deleteExercise(exerciseName, key, gyakorlatDiv) {
+function deleteExercise(containerId, key, gyakorlatDiv) {
+  const exerciseName = containerId; // A containerId azonosítója lesz az exerciseName
   const gyakorlatRef = ref(database, exerciseName + '/' + key);
 
   // Az adat törlése Firebase-ből
@@ -98,11 +100,14 @@ function fetchExerciseData(exerciseName, containerId) {
   get(dbRef).then((snapshot) => {
     if (snapshot.exists()) {
       const exercises = snapshot.val();
-      for (const key in exercises) {
+      // A legújabb adatokat először jelenítjük meg
+      const sortedExercises = Object.keys(exercises).sort((a, b) => new Date(exercises[b].date) - new Date(exercises[a].date));
+      
+      sortedExercises.forEach((key) => {
         const date = exercises[key].date;
         const weight = exercises[key].weight;
         addExerciseToTable(containerId, date, weight, key);
-      }
+      });
     }
   }).catch((error) => {
     console.error("Hiba történt az adatok betöltése során: ", error);
