@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GymApp</title>
+  <title>Hátizom</title>
   <link rel="stylesheet" href="bootstrap.css">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
@@ -13,10 +13,48 @@
     <div class="h1div">
       <h1>Hátizom</h1>
     </div>
+
+    <!-- Lehúzás -->
+    <h2 class="gyakorlath2">Lehúzás</h2>
+    <div class="gyakorlatcontent">
+      <div class="gyakorlatok" id="lat-pull">
+        <!-- Adatok itt fognak megjelenni -->
+      </div>
+    </div>
+    <div class="form-floating">
+      <textarea id="latpullsuly" class="form-control beviteldiv" placeholder="Új súly" id="floatingTextarea"></textarea>
+      <label for="floatingTextarea">Új súly</label>
+    </div>
+    <button id="sendlatpull" type="button" class="btn rogzitesbutton">Rögzítés</button>
+
+    <!-- Evezőgép -->
+    <h2 class="gyakorlath2">Evezőgép</h2>
+    <div class="gyakorlatcontent">
+      <div class="gyakorlatok" id="rowing-machine">
+        <!-- Adatok itt fognak megjelenni -->
+      </div>
+    </div>
+    <div class="form-floating">
+      <textarea id="rowingmachineweight" class="form-control beviteldiv" placeholder="Új súly" id="floatingTextarea"></textarea>
+      <label for="floatingTextarea">Új súly</label>
+    </div>
+    <button id="sendrowingmachine" type="button" class="btn rogzitesbutton">Rögzítés</button>
+
+    <!-- Lehúzás Egy Kézzel -->
+    <h2 class="gyakorlath2">Lehúzás Egy Kézzel</h2>
+    <div class="gyakorlatcontent">
+      <div class="gyakorlatok" id="single-lat-pull">
+        <!-- Adatok itt fognak megjelenni -->
+      </div>
+    </div>
+    <div class="form-floating">
+      <textarea id="singlelatpullsuly" class="form-control beviteldiv" placeholder="Új súly" id="floatingTextarea"></textarea>
+      <label for="floatingTextarea">Új súly</label>
+    </div>
+    <button id="sendsinglelatpull" type="button" class="btn rogzitesbutton">Rögzítés</button>
   </div>
-  
-  
+
   <script src="bootstrap.js"></script>
-  <script src="app.js"></script>  
+  <script type="module" src="app.js"></script>
 </body>
 </html>

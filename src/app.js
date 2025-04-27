@@ -16,34 +16,38 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Funkció a gyakorlatok adatainak rögzítésére
+// Funkciók rögzítéshez
 function recordExercise(exerciseName, inputId, containerId, buttonId) {
-  document.getElementById(buttonId).addEventListener('click', function() {
-    const weight = document.getElementById(inputId).value; // Az űrlapból beírt súly
-    const date = new Date().toLocaleDateString(); // A mai dátum
+  // Ellenőrizzük, hogy az elem létezik-e
+  const button = document.getElementById(buttonId);
+  if (button) {
+    button.addEventListener('click', function() {
+      const weight = document.getElementById(inputId).value; // Az űrlapból beírt súly
+      const date = new Date().toLocaleDateString(); // A mai dátum
 
-    if (weight !== "") {
-      const newPostKey = push(ref(database, exerciseName)).key; // Új kulcs generálása
-      set(ref(database, exerciseName + '/' + newPostKey), {
-        date: date,
-        weight: weight
-      }).then(() => {
-        addExerciseToTable(containerId, date, weight, newPostKey); // Hozzáadjuk a táblázathoz
-        document.getElementById(inputId).value = ''; // Űrlap törlése
-      }).catch((error) => {
-        console.error("Hiba történt az adat rögzítése során: ", error);
-      });
-    }
-  });
+      if (weight !== "") {
+        const newPostKey = push(ref(database, exerciseName)).key; // Új kulcs generálása
+        set(ref(database, exerciseName + '/' + newPostKey), {
+          date: date,
+          weight: weight
+        }).then(() => {
+          addExerciseToTable(containerId, date, weight, newPostKey); // Hozzáadjuk a táblázathoz
+          document.getElementById(inputId).value = ''; // Űrlap törlése
+        }).catch((error) => {
+          console.error("Hiba történt az adat rögzítése során: ", error);
+        });
+      }
+    });
+  }
 }
 
-// Funkció, ami hozzáadja a gyakorlatot a táblázathoz
+// Funkció a gyakorlatok megjelenítéséhez a táblázatban
 function addExerciseToTable(containerId, date, weight, key) {
   const gyakorlatokDiv = document.getElementById(containerId);
 
   const newGyakorlat = document.createElement('div');
   newGyakorlat.classList.add('gyakorlat');
-  newGyakorlat.dataset.key = key; // Az adat key hozzáadása a div-hez
+  newGyakorlat.dataset.key = key;
 
   const dateDiv = document.createElement('div');
   dateDiv.classList.add('gyakorlatdata');
@@ -57,15 +61,14 @@ function addExerciseToTable(containerId, date, weight, key) {
   deleteButton.classList.add('torlo');
   deleteButton.textContent = 'Törlés';
   deleteButton.addEventListener('click', function() {
-    deleteExercise(containerId, key, newGyakorlat); // A gomb megnyomásakor törölni fogjuk az adatot
+    deleteExercise(containerId, key, newGyakorlat); // Törlés
   });
 
   newGyakorlat.appendChild(dateDiv);
   newGyakorlat.appendChild(weightDiv);
   newGyakorlat.appendChild(deleteButton);
 
-  // Új gyakorlatot a lista legelső helyére rakjuk
-  gyakorlatokDiv.insertBefore(newGyakorlat, gyakorlatokDiv.firstChild); // Új elem az elejére kerül
+  gyakorlatokDiv.insertBefore(newGyakorlat, gyakorlatokDiv.firstChild); // Az új gyakorlatot a lista elejére helyezzük
 }
 
 // Funkció a gyakorlat törlésére Firebase-ből és a DOM-ból
@@ -75,24 +78,32 @@ function deleteExercise(containerId, key, gyakorlatDiv) {
 
   // Az adat törlése Firebase-ből
   remove(gyakorlatRef).then(() => {
-    // Ha sikerült törölni, eltávolítjuk a DOM-ból
-    gyakorlatDiv.remove();
+    gyakorlatDiv.remove(); // Ha sikerült törölni, eltávolítjuk a DOM-ból
   }).catch((error) => {
     console.error("Hiba történt a törlés során: ", error);
   });
 }
 
 // Az oldal betöltésekor minden adat lekérése a Firebase-ből
-window.onload = function() {
-  // Incline Dumbbell Press
+document.addEventListener('DOMContentLoaded', function() {
+  // Mell Gyakorlatok
   fetchExerciseData('inclinedumbbellpress', 'incline-dumbbell-press');
-
-  // Gépes Nyomás
   fetchExerciseData('gepesnyomas', 'machine-press');
-
-  // Tárogatás
   fetchExerciseData('flatarogatas', 'fly-press');
-};
+
+  // Hát Gyakorlatok
+  fetchExerciseData('latpull', 'lat-pull');
+  fetchExerciseData('rowingmachine', 'rowing-machine');
+  fetchExerciseData('singlelatpull', 'single-lat-pull');
+
+  // Rögzítés az összes gyakorlatra
+  recordExercise('inclinedumbbellpress', 'inclinedbsuly', 'incline-dumbbell-press', 'sendincdb');
+  recordExercise('gepesnyomas', 'machinepresssuly', 'machine-press', 'sendmachinepress');
+  recordExercise('flatarogatas', 'flatarogatsuly', 'fly-press', 'sendflatarogat');
+  recordExercise('latpull', 'latpullsuly', 'lat-pull', 'sendlatpull');
+  recordExercise('rowingmachine', 'rowingmachineweight', 'rowing-machine', 'sendrowingmachine');
+  recordExercise('singlelatpull', 'singlelatpullsuly', 'single-lat-pull', 'sendsinglelatpull');
+});
 
 // Funkció a gyakorlatok adatainak lekérésére
 function fetchExerciseData(exerciseName, containerId) {
@@ -100,7 +111,6 @@ function fetchExerciseData(exerciseName, containerId) {
   get(dbRef).then((snapshot) => {
     if (snapshot.exists()) {
       const exercises = snapshot.val();
-      // A legújabb adatokat először jelenítjük meg
       const sortedExercises = Object.keys(exercises).sort((a, b) => new Date(exercises[b].date) - new Date(exercises[a].date));
       
       sortedExercises.forEach((key) => {
@@ -113,8 +123,3 @@ function fetchExerciseData(exerciseName, containerId) {
     console.error("Hiba történt az adatok betöltése során: ", error);
   });
 }
-
-// Rögzítés az összes gyakorlatra
-recordExercise('inclinedumbbellpress', 'inclinedbsuly', 'incline-dumbbell-press', 'sendincdb');
-recordExercise('gepesnyomas', 'machinepresssuly', 'machine-press', 'sendmachinepress');
-recordExercise('flatarogatas', 'flatarogatsuly', 'fly-press', 'sendflatarogat');
