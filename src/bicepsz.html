@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GymApp</title>
+  <title>Bicepsz</title>
   <link rel="stylesheet" href="bootstrap.css">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
@@ -13,10 +13,35 @@
     <div class="h1div">
       <h1>Bicepsz</h1>
     </div>
+
+    <!-- Egykezes Karhajlítás -->
+    <h2 class="gyakorlath2">Egykezes Karhajlítás</h2>
+    <div class="gyakorlatcontent">
+      <div class="gyakorlatok" id="one-arm-curl">
+        <!-- Adatok itt fognak megjelenni -->
+      </div>
+    </div>
+    <div class="form-floating">
+      <textarea id="onearmcurlsuly" class="form-control beviteldiv" placeholder="Új súly"></textarea>
+      <label for="onearmcurlsuly">Új súly</label>
+    </div>
+    <button id="sendonearmcurl" type="button" class="btn rogzitesbutton">Rögzítés</button>
+
+    <!-- Scott Pados Karhajlítás -->
+    <h2 class="gyakorlath2">Scott Pados Karhajlítás</h2>
+    <div class="gyakorlatcontent">
+      <div class="gyakorlatok" id="scott-curl">
+        <!-- Adatok itt fognak megjelenni -->
+      </div>
+    </div>
+    <div class="form-floating">
+      <textarea id="scottcurlsuly" class="form-control beviteldiv" placeholder="Új súly"></textarea>
+      <label for="scottcurlsuly">Új súly</label>
+    </div>
+    <button id="sendscottcurl" type="button" class="btn rogzitesbutton">Rögzítés</button>
   </div>
-  
-  
+
   <script src="bootstrap.js"></script>
-  <script src="app.js"></script>  
+  <script type="module" src="app.js"></script>
 </body>
 </html>

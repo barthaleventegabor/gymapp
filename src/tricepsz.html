@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GymApp</title>
+  <title>Tricepsz</title>
   <link rel="stylesheet" href="bootstrap.css">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
@@ -13,10 +13,35 @@
     <div class="h1div">
       <h1>Tricepsz</h1>
     </div>
+
+    <!-- Skull Crusher -->
+    <h2 class="gyakorlath2">Skull Crusher</h2>
+    <div class="gyakorlatcontent">
+      <div class="gyakorlatok" id="skull-crusher">
+        <!-- Adatok itt fognak megjelenni -->
+      </div>
+    </div>
+    <div class="form-floating">
+      <textarea id="skullcurlsuly" class="form-control beviteldiv" placeholder="Új súly"></textarea>
+      <label for="skullcurlsuly">Új súly</label>
+    </div>
+    <button id="sendskullcrusher" type="button" class="btn rogzitesbutton">Rögzítés</button>
+
+    <!-- Letolás -->
+    <h2 class="gyakorlath2">Letolás</h2>
+    <div class="gyakorlatcontent">
+      <div class="gyakorlatok" id="lat-pulldown">
+        <!-- Adatok itt fognak megjelenni -->
+      </div>
+    </div>
+    <div class="form-floating">
+      <textarea id="latpulldownsuly" class="form-control beviteldiv" placeholder="Új súly"></textarea>
+      <label for="latpulldownsuly">Új súly</label>
+    </div>
+    <button id="sendlatpulldown" type="button" class="btn rogzitesbutton">Rögzítés</button>
   </div>
-  
-  
+
   <script src="bootstrap.js"></script>
-  <script src="app.js"></script>  
+  <script type="module" src="app.js"></script>
 </body>
 </html>
