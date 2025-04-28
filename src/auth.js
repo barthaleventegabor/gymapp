@@ -33,7 +33,7 @@ document.getElementById('google-login').addEventListener('click', () => {
         document.getElementById('login-container').style.display = 'none'; // A bejelentkezési gomb eltüntetése
         document.getElementById('logout-container').style.display = 'block'; // A kijelentkezési gomb megjelenítése
       } else {
-        alert("Hozzáférés megtagadva. Csak a saját fiókom fiók használható.");
+        alert("Hozzáférés megtagadva. Csak a saját fiókom használható.");
         signOut(auth);
       }
     })

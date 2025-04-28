@@ -7,7 +7,7 @@ const firebaseConfig = {
   authDomain: "gymapp-93351.firebaseapp.com",
   databaseURL: "https://gymapp-93351-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "gymapp-93351",
-  storageBucket: "gymapp-93351.firebasestorage.app",
+  storageBucket: "gymapp-93351.appspot.com",
   messagingSenderId: "679760443477",
   appId: "1:679760443477:web:76d9b1217b67f6df2fbcdc"
 };
@@ -21,20 +21,19 @@ function recordExercise(exerciseName, inputId, containerId, buttonId) {
   const button = document.getElementById(buttonId);
   const input = document.getElementById(inputId);
   
-  // Ellenőrizd, hogy az elem létezik, mielőtt hozzáadod az eseménykezelőt
   if (button && input) {
     button.addEventListener('click', function() {
-      const weight = input.value; // Az űrlapból beírt súly
-      const date = new Date().toLocaleDateString(); // A mai dátum
+      const weight = input.value;
+      const date = new Date().toLocaleDateString();
 
       if (weight !== "") {
-        const newPostKey = push(ref(database, exerciseName)).key; // Új kulcs generálása
+        const newPostKey = push(ref(database, exerciseName)).key;
         set(ref(database, exerciseName + '/' + newPostKey), {
           date: date,
           weight: weight
         }).then(() => {
-          addExerciseToTable(containerId, date, weight, newPostKey); // Hozzáadjuk a táblázathoz
-          input.value = ''; // Űrlap törlése
+          addExerciseToTable(containerId, date, weight, newPostKey, exerciseName);
+          input.value = '';
         }).catch((error) => {
           console.error("Hiba történt az adat rögzítése során: ", error);
         });
@@ -46,10 +45,9 @@ function recordExercise(exerciseName, inputId, containerId, buttonId) {
 }
 
 // Funkció a gyakorlatok megjelenítéséhez a táblázatban
-function addExerciseToTable(containerId, date, weight, key) {
+function addExerciseToTable(containerId, date, weight, key, exerciseName) {
   const gyakorlatokDiv = document.getElementById(containerId);
   
-  // Ellenőrizzük, hogy létezik-e a containerId
   if (gyakorlatokDiv) {
     const newGyakorlat = document.createElement('div');
     newGyakorlat.classList.add('gyakorlat');
@@ -67,27 +65,25 @@ function addExerciseToTable(containerId, date, weight, key) {
     deleteButton.classList.add('torlo');
     deleteButton.textContent = 'Törlés';
     deleteButton.addEventListener('click', function() {
-      deleteExercise(containerId, key, newGyakorlat); // Törlés
+      deleteExercise(exerciseName, key, newGyakorlat);
     });
 
     newGyakorlat.appendChild(dateDiv);
     newGyakorlat.appendChild(weightDiv);
     newGyakorlat.appendChild(deleteButton);
 
-    gyakorlatokDiv.insertBefore(newGyakorlat, gyakorlatokDiv.firstChild); // Az új gyakorlatot a lista elejére helyezzük
+    gyakorlatokDiv.insertBefore(newGyakorlat, gyakorlatokDiv.firstChild);
   } else {
     console.error(`Nem található a containerId: ${containerId}`);
   }
 }
 
 // Funkció a gyakorlat törlésére Firebase-ből és a DOM-ból
-function deleteExercise(containerId, key, gyakorlatDiv) {
-  const exerciseName = containerId; // A containerId azonosítója lesz az exerciseName
+function deleteExercise(exerciseName, key, gyakorlatDiv) {
   const gyakorlatRef = ref(database, exerciseName + '/' + key);
 
-  // Az adat törlése Firebase-ből
   remove(gyakorlatRef).then(() => {
-    gyakorlatDiv.remove(); // Ha sikerült törölni, eltávolítjuk a DOM-ból
+    gyakorlatDiv.remove();
   }).catch((error) => {
     console.error("Hiba történt a törlés során: ", error);
   });
@@ -129,7 +125,7 @@ function fetchExerciseData(exerciseName, containerId) {
       sortedExercises.forEach((key) => {
         const date = exercises[key].date;
         const weight = exercises[key].weight;
-        addExerciseToTable(containerId, date, weight, key);
+        addExerciseToTable(containerId, date, weight, key, exerciseName);
       });
     }
   }).catch((error) => {
